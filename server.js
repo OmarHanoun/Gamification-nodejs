@@ -6,6 +6,9 @@ const app=express();
 app.use(express.json());
 app.use(cors());
 
+const multer  = require('multer')
+const upload = multer({ dest: 'CXHeroVideos/' }) //username
+
 // Create Connection
 var con = mysql.createConnection({
     host: "localhost",
@@ -20,6 +23,8 @@ con.connect(function(err) {
     }  
     console.log("Connected!");
 });
+
+
 
 //Home page
 app.get('/',(req,res)=>{
@@ -130,13 +135,21 @@ app.delete('/api/games/:id',(req,res)=>{
         });
       });
 })
-app.post('/api/story/upload',
-    fileUpload({createParentPath:true}),(req,res)=>{
-        const files=req.files;
-        console.log(files)
-        return res.json({status:'logged',message:'logged'})
-    }
-)
+
+// app.post('/api/story/upload',(req,res)=>{
+//         const files=req.video;
+//         console.log(files)
+//         return res.json({status:'logged',message:'logged'})
+//     }
+// )
+
+app.post('/api/story/upload', upload.single('video'), function (req, res) {
+   // req.file is the name of your file in the form above, here 'uploaded_file'
+   // req.body will hold the text fields, if there were any 
+   console.log(req.video)
+   console.log('uploaded')
+});
 
 const port =process.env.PORT || 5000;
 app.listen(port,()=>console.log(`listening on port ${port} ...`));
+
