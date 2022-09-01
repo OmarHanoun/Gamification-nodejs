@@ -9,7 +9,6 @@ app.use(cors());
 const multer  = require('multer')
 const upload = multer({ dest: 'CXHeroVideos/' }) //username
 
-// Create Connection
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -26,12 +25,10 @@ con.connect(function(err) {
 
 
 
-//Home page
 app.get('/',(req,res)=>{
     res.send("Home Page !")
 });
 
-//Get All games
 app.get('/api/games',(req,res)=>{
     con.connect(function(err) {
         con.query("SELECT * FROM games;", function (err, rows) {
@@ -41,7 +38,6 @@ app.get('/api/games',(req,res)=>{
       });
 })
 
-//Get All stories
 app.get('/api/stories',(req,res)=>{
   con.connect(function(err) {
       con.query("SELECT * FROM cxhero;", function (err, rows) {
@@ -51,7 +47,6 @@ app.get('/api/stories',(req,res)=>{
     });
 })
 
-//Get game with id
 app.get('/api/games/:id',(req,res)=>{
     con.connect(function(err) {
         con.query(`SELECT * FROM games where id=${req.params.id};`, function (err, rows) {
@@ -62,7 +57,6 @@ app.get('/api/games/:id',(req,res)=>{
   }
 )
 
-//Get story with id
 app.get('/api/stories/:id',(req,res)=>{
   con.connect(function(err) {
       con.query(`SELECT * FROM cxhero where id=${req.params.id};`, function (err, rows) {
@@ -73,7 +67,6 @@ app.get('/api/stories/:id',(req,res)=>{
 }
 )
 
-//Update games
 app.put('/api/games/:id',(req,res)=>{
   con.connect(function(err) {
       con.query(`UPDATE games SET name = '${req.body.name}',image='${req.body.image}'
@@ -84,7 +77,6 @@ app.put('/api/games/:id',(req,res)=>{
     });
 })
 
-//Update stories
 app.put('/api/stories/:id',(req,res)=>{
   con.connect(function(err) {
       con.query(`UPDATE cxhero SET video = '${req.body.video}',story='${req.body.story}'
@@ -96,7 +88,6 @@ app.put('/api/stories/:id',(req,res)=>{
 })
 
 
-//Add game
 app.post('/api/games',(req,res)=>{
     con.connect(function(err) {
         con.query(`INSERT INTO games (name,image,availability) VALUES ('${req.body.name}',
@@ -107,7 +98,6 @@ app.post('/api/games',(req,res)=>{
     });
 })
 
-//Add story
 app.post('/api/story',(req,res)=>{
   con.connect(function(err){
     con.query(`INSERT INTO cxhero (video,story,author) VALUES ('${req.body.video}',
@@ -115,7 +105,7 @@ app.post('/api/story',(req,res)=>{
   })
 })
 
-//Update user
+
 app.put('/api/games/:id',(req,res)=>{
     con.connect(function(err) {
         con.query(`UPDATE games SET video = '${req.body.video}',story='${req.body.story}'
@@ -126,7 +116,6 @@ app.put('/api/games/:id',(req,res)=>{
       });
 })
 
-//Delete user
 app.delete('/api/games/:id',(req,res)=>{
     con.connect(function(err) {
         con.query(`DELETE FROM games WHERE id = '${req.params.id}' `, function (err, rows) {
