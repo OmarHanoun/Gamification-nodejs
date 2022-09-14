@@ -32,8 +32,8 @@ con.connect(function (err) {
 app.post("/api/story/rate", (req, res) => {
   con.connect(function (err) {
     con.query(
-      `INSERT INTO stories_rate (story_id,user_id,rate) VALUES ('${req.body.story_id}',
-        '${req.body.user_id}','${req.body.rate}')`,
+      `INSERT INTO stories_rate (story_name,username,rate) VALUES ('${req.body.story_name}',
+        '${req.body.username}','${req.body.rate}')`,
       function (err, rows) {
         if (err) throw err;
         res.send("rated successfully !");
@@ -50,6 +50,20 @@ app.get("/api/story/rate", (req, res) => {
     });
   });
 });
+
+app.post("/api/story/story_rates", (req, res) => {
+  con.connect(function (err) {
+    con.query(
+      `SELECT AVG(rate) FROM stories_rate WHERE story_name='${req.body.story_name}';`,
+      function (err, rows) {
+        if (err) throw err;
+        res.send(rows);
+      }
+    );
+  });
+});
+
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`listening on port ${port} ...`));

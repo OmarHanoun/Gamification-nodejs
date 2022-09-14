@@ -35,11 +35,14 @@ app.post("/api/login", (req, res) => {
     con.query(
       `SELECT username FROM users where username='${req.body.username}' and password='${req.body.password}';`,
       function (err, rows) {
-        if (err || rows.length==0) {
-            res.send("wrong password or username !");
+        if (err) {
+         throw(err);
+        }
+        if (rows.length==0) {
+          res.send(rows);
         }
         else{
-          res.send("logged in successfully !");
+          res.send(rows);
         }
       }
     );

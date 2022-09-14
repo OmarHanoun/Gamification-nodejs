@@ -44,7 +44,7 @@ app.get("/api/games", (req, res) => {
 
 app.get("/api/stories", (req, res) => {
   con.connect(function (err) {
-    con.query("SELECT * FROM cxhero;", function (err, rows) {
+    con.query("SELECT * FROM stories;", function (err, rows) {
       if (err) throw err;
       res.send(rows);
     });
@@ -66,7 +66,7 @@ app.get("/api/games/:id", (req, res) => {
 app.get("/api/stories/:id", (req, res) => {
   con.connect(function (err) {
     con.query(
-      `SELECT * FROM cxhero where id=${req.params.id};`,
+      `SELECT * FROM stories where id=${req.params.id};`,
       function (err, rows) {
         if (err) throw err;
         res.send(rows);
@@ -90,21 +90,20 @@ app.put("/api/games/:id", (req, res) => {
 
 app.post("/api/story", (req, res) => {
   con.connect(function (err) {
-    con.query(`INSERT INTO cxhero (video,story,author) VALUES ('${req.body.video}',
+    con.query(`INSERT INTO stories (video,story,author) VALUES ('${req.body.video}',
       '${req.body.story}','${req.body.author}')`);
   });
 });
 
-
 app.put("/api/stories/:id", (req, res) => {
   con.connect(function (err) {
     con.query(
-      `UPDATE cxhero SET rate=${req.body.rate} WHERE id = '${req.params.id}' `,
+      `UPDATE stories SET rate=${req.body.rate} WHERE id = '${req.params.id}' `,
       function (err, rows) {
         if (err) throw err;
         res.send("Updated successfully !");
         console.log(req.body.rate);
-        console.log(typeof(req.body.rate));
+        console.log(typeof req.body.rate);
       }
     );
   });
@@ -125,7 +124,7 @@ app.post("/api/games", (req, res) => {
 
 app.post("/api/story", (req, res) => {
   con.connect(function (err) {
-    con.query(`INSERT INTO cxhero (video,story,author) VALUES ('${req.body.video}',
+    con.query(`INSERT INTO stories (video,story,author) VALUES ('${req.body.video}',
     '${req.body.story}','${req.body.author}')`);
   });
 });
@@ -203,31 +202,15 @@ app.post("/upload", (req, res) => {
   });
 });
 
-app.post("/api/login", (req, res) => {
-
-  con.connect(function (err) {
-    con.query(
-      `SELECT username FROM users where username='${req.body.username}' and password='${req.body.password}';`,
-      function (err, rows) {
-        if (err || rows.length==0) {
-            res.send("wrong password or username !");
-        }
-        else{
-          res.send("logged in successfully !");
-        }
-      }
-    );
-  });
-});
-
 app.post("/api/story/rate", (req, res) => {
   con.connect(function (err) {
     con.query(
-      `INSERT INTO stories_rate (story_id,user_id,rate) VALUES ('${req.body.story_id}',
-        '${req.body.user_id}','${req.body.rate}')`,
+      `INSERT INTO stories_rate (story_name,username,rate) VALUES ('${req.body.story_name}',
+        '${req.body.username}','${req.body.rate}')`,
       function (err, rows) {
         if (err) throw err;
         res.send("rated successfully !");
+        console.log("rated successfully !")
       }
     );
   });
@@ -239,6 +222,18 @@ app.get("/api/story/rate", (req, res) => {
       if (err) throw err;
       res.send(rows);
     });
+  });
+});
+
+app.post("/api/story/story_rates", (req, res) => {
+  con.connect(function (err) {
+    con.query(
+      `SELECT AVG(rate) FROM stories_rate WHERE story_name='${req.body.story_name}';`,
+      function (err, rows) {
+        if (err) throw err;
+        res.send(rows);
+      }
+    );
   });
 });
 
@@ -254,19 +249,23 @@ app.get("/api/users", (req, res) => {
 app.post("/api/login", (req, res) => {
   con.connect(function (err) {
     con.query(
-      `SELECT * FROM users where username=${req.body.username} and password=${req.body.password};`,
+      `SELECT id,username FROM users where username='${req.body.username}' and password='${req.body.password}';`,
       function (err, rows) {
         if (err) {
-            res.send("wrong password or username !");
-        };
-        res.send(rows);
+          throw err;
+        }
+        if (rows.length == 0) {
+          res.send(rows);
+        }
+        else {
+          res.send(rows);
+        }
       }
     );
   });
 });
 
+
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`listening on port ${port} ...`));
-
-
-
