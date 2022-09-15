@@ -1,6 +1,36 @@
 const uploadFile = require("../middleware/upload");
 const fs = require("fs");
 const baseUrl = "http://localhost:5000/files/";
+var mysql = require("mysql");
+const express = require("express");
+const fileUpload = require("express-fileupload");
+var cors = require("cors");
+const app = express();
+const bodyParser = require("body-parser");
+
+app.use(express.json());
+app.use(cors());
+app.use(fileUpload());
+app.use(express.static("files"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
+
+const multer = require("multer");
+
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "123456789",
+  database: "Gamification",
+});
+con.connect(function (err) {
+  if (err) {
+    console.log("not Connected!");
+    throw err;
+  }
+  console.log("Connected!");
+});
 
 const upload = async (req, res) => {
   try {
@@ -13,10 +43,6 @@ const upload = async (req, res) => {
     res.status(200).send({
       message: "Uploaded the file successfully: " + req.file.originalname,
     });
-
-    
-
-
   } catch (err) {
     console.log(err);
 
@@ -28,6 +54,13 @@ const upload = async (req, res) => {
 
     res.status(500).send({
       message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+    });
+
+    app.post("/api/story", (req, res) => {
+      con.connect(function (err) {
+        con.query(`INSERT INTO stories (video,story,author) VALUES ('${req.body.video}',
+          '${req.body.story}','${req.body.author}')`);
+      });
     });
   }
 };

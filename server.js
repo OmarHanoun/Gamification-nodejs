@@ -122,12 +122,12 @@ app.post("/api/games", (req, res) => {
   });
 });
 
-app.post("/api/story", (req, res) => {
-  con.connect(function (err) {
-    con.query(`INSERT INTO stories (video,story,author) VALUES ('${req.body.video}',
-    '${req.body.story}','${req.body.author}')`);
-  });
-});
+// app.post("/api/story", (req, res) => {
+//   con.connect(function (err) {
+//     con.query(`INSERT INTO stories (video,story,author) VALUES ('${req.body.video}',
+//     '${req.body.story}','${req.body.author}')`);
+//   });
+// });
 
 app.put("/api/games/:id", (req, res) => {
   con.connect(function (err) {
@@ -210,7 +210,7 @@ app.post("/api/story/rate", (req, res) => {
       function (err, rows) {
         if (err) throw err;
         res.send("rated successfully !");
-        console.log("rated successfully !")
+        console.log("rated successfully !");
       }
     );
   });
@@ -256,16 +256,13 @@ app.post("/api/login", (req, res) => {
         }
         if (rows.length == 0) {
           res.send(rows);
-        }
-        else {
+        } else {
           res.send(rows);
         }
       }
     );
   });
 });
-
-
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`listening on port ${port} ...`));

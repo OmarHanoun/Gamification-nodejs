@@ -1,3 +1,3 @@
-import './connection';
-import './cxHeroAPI';
-import './gamehubAPI';
+import "./connection";
+import "./cxHeroAPI";
+import "./gamehubAPI";
