@@ -90,8 +90,8 @@ app.put("/api/games/:id", (req, res) => {
 
 app.post("/api/story", (req, res) => {
   con.connect(function (err) {
-    con.query(`INSERT INTO stories (video,story,author) VALUES ('${req.body.video}',
-      '${req.body.story}','${req.body.author}')`);
+    con.query(`INSERT INTO stories (video,story,author,title) VALUES ('${req.body.video}',
+      '${req.body.story}','${req.body.author}','${req.body.title}')`);
   });
 });
 
@@ -205,8 +205,8 @@ app.post("/upload", (req, res) => {
 app.post("/api/story/rate", (req, res) => {
   con.connect(function (err) {
     con.query(
-      `INSERT INTO stories_rate (story_name,username,rate) VALUES ('${req.body.story_name}',
-        '${req.body.username}','${req.body.rate}')`,
+      `INSERT INTO stories_rate (story_name,username,rate,feed_back) VALUES ('${req.body.story_name}',
+        '${req.body.username}','${req.body.rate}','${req.body.feed_back}')`,
       function (err, rows) {
         if (err) throw err;
         res.send("rated successfully !");
@@ -216,7 +216,7 @@ app.post("/api/story/rate", (req, res) => {
   });
 });
 
-app.get("/api/story/rate", (req, res) => {
+app.get("/api/story/story_rates", (req, res) => {
   con.connect(function (err) {
     con.query("SELECT * FROM stories_rate;", function (err, rows) {
       if (err) throw err;
@@ -228,7 +228,7 @@ app.get("/api/story/rate", (req, res) => {
 app.post("/api/story/story_rates", (req, res) => {
   con.connect(function (err) {
     con.query(
-      `SELECT AVG(rate) FROM stories_rate WHERE story_name='${req.body.story_name}';`,
+      `SELECT rate FROM stories_rate where username='${req.body.username}' and story_name='${req.body.story_name}';`,
       function (err, rows) {
         if (err) throw err;
         res.send(rows);
@@ -236,6 +236,21 @@ app.post("/api/story/story_rates", (req, res) => {
     );
   });
 });
+
+app.post("/api/story/rate_story", (req, res) => {
+  con.connect(function (err) {
+    con.query(
+      `INSERT INTO stories_rate (story_name,username,rate,feed_back) VALUES ('${req.body.story_name}',
+        '${req.body.username}','${req.body.rate}','${req.body.feed_back}')`,
+      function (err, rows) {
+        if (err) throw err;
+        res.send("rated successfully !");
+        console.log("rated successfully !");
+      }
+    );
+  });
+});
+
 
 app.get("/api/users", (req, res) => {
   con.connect(function (err) {

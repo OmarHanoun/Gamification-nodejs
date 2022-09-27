@@ -79,8 +79,8 @@ app.put("/api/stories/:id", (req, res) => {
 
 app.post("/api/story", (req, res) => {
   con.connect(function (err) {
-    con.query(`INSERT INTO cxhero (video,story,author) VALUES ('${req.body.video}',
-      '${req.body.story}','${req.body.author}')`,
+    con.query(`INSERT INTO cxhero (video,story,author,title) VALUES ('${req.body.video}',
+      '${req.body.story}','${req.body.author}','${req.body.title}')`,
       function (err, rows) {
                 if (err) throw err;
                 res.send("added successfully !");
