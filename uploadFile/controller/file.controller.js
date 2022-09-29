@@ -62,6 +62,7 @@ const upload = async (req, res) => {
           '${req.body.story}','${req.body.author}')`);
       });
     });
+    
   }
 };
 

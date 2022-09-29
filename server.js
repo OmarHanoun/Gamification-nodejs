@@ -41,7 +41,6 @@ app.get("/api/games", (req, res) => {
     });
   });
 });
-
 app.get("/api/stories", (req, res) => {
   con.connect(function (err) {
     con.query("SELECT * FROM stories;", function (err, rows) {
@@ -50,7 +49,28 @@ app.get("/api/stories", (req, res) => {
     });
   });
 });
-
+app.post("/api/stories/filename", (req, res) => {
+  con.connect(function (err) {
+    con.query(
+      `SELECT file FROM stories where author='${req.body.author}' and title='${req.body.story_name}';`,
+      function (err, rows) {
+        if (err) throw err;
+        res.send(rows);
+      }
+    );
+  });
+});
+app.post("/stories/videoname", (req, res) => {
+  con.connect(function (err) {
+    con.query(
+      `SELECT video FROM stories where author='${req.body.author}' and title='${req.body.story_name}';`,
+      function (err, rows) {
+        if (err) throw err;
+        res.send(rows);
+      }
+    );
+  });
+});
 app.get("/api/games/:id", (req, res) => {
   con.connect(function (err) {
     con.query(
@@ -90,8 +110,8 @@ app.put("/api/games/:id", (req, res) => {
 
 app.post("/api/story", (req, res) => {
   con.connect(function (err) {
-    con.query(`INSERT INTO stories (video,story,author,title) VALUES ('${req.body.video}',
-      '${req.body.story}','${req.body.author}','${req.body.title}')`);
+    con.query(`INSERT INTO stories (video,story,author,title,file) VALUES ('${req.body.video}',
+      '${req.body.story}','${req.body.author}','${req.body.title}','${req.body.file}')`);
   });
 });
 
@@ -250,7 +270,6 @@ app.post("/api/story/rate_story", (req, res) => {
     );
   });
 });
-
 
 app.get("/api/users", (req, res) => {
   con.connect(function (err) {
