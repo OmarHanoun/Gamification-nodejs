@@ -290,8 +290,29 @@ app.post("/api/login", (req, res) => {
         }
         if (rows.length == 0) {
           res.send(rows);
-        } else {
+        }
+        else {
           res.send(rows);
+        }
+      }
+    );
+  });
+});
+
+app.post("/api/moderators", (req, res) => {
+  con.connect(function (err) {
+    con.query(
+      `SELECT username FROM moderators where username='${req.body.username}'`,
+      function (err, rows) {
+        if (err) {
+          throw err;
+        }
+        if (rows.length == 0) {
+          res.send(false);
+          // res.send(rows);
+        }
+        else {
+          res.send(true);
         }
       }
     );
